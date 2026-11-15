@@ -1,0 +1,27 @@
+name: publish-apk
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-apk.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download APK
+        run: |
+          set -euxo pipefail
+          curl -fL --retry 10 --retry-delay 10 --retry-all-errors --connect-timeout 30 --max-time 900 'https://wbapp-aaxrth1nwojlky35oydsqe.app.workbuddy.host/xyzw-assistant-v1.0.30-release.apk?sharecode=462XU7DBBH' -o app.apk
+          sz=$(stat -c%s app.apk)
+          echo "downloaded size=$sz"
+          test "$sz" -eq 50821971
+          sha256sum app.apk
+      - name: Upload APK to Release 1.0.30
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euxo pipefail
+          gh release upload 1.0.30 'app.apk#xyzw-assistant-v1.0.30-release.apk' --clobber --repo "$GITHUB_REPOSITORY"
+          gh release view 1.0.30 --repo "$GITHUB_REPOSITORY"
