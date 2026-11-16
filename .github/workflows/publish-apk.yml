@@ -13,16 +13,16 @@ jobs:
       - name: Download APK
         run: |
           set -euxo pipefail
-          curl -fL --retry 10 --retry-delay 10 --retry-all-errors --connect-timeout 30 --max-time 900 'https://wbapp-aaxrth1nwojlky35oydsqe.app.workbuddy.host/xyzw-assistant-v1.0.31-release.apk?sharecode=462XU7DBBH' -o app.apk
+          curl -fL --retry 10 --retry-delay 10 --retry-all-errors --connect-timeout 30 --max-time 900 'https://wbapp-aaxrth1nwojlky35oydsqe.app.workbuddy.host/xyzw-assistant-v1.0.32-release.apk?sharecode=462XU7DBBH' -o app.apk
           sz=$(stat -c%s app.apk)
           echo "downloaded size=$sz"
-          test "$sz" -eq 50833651
-          echo "30a3480bfd460c21bcc0a565ec1ab14e77f2f13781c23ba20501e9df6e552a71  app.apk" | sha256sum -c -
-      - name: Publish Release 1.0.31
+          test "$sz" -eq 50832227
+          echo "5e3b4c9bf6cc2dbab5bcd8828790aba54e83dbf18777bcde09162bfaff0ecefe  app.apk" | sha256sum -c -
+      - name: Publish Release 1.0.32
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euxo pipefail
-          gh release view 1.0.31 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || gh release create 1.0.31 --repo "$GITHUB_REPOSITORY" --title "1.0.31" --notes "切号设置三段链路；功法入口双路识别；同服同名序号任意数量；息屏防护（解锁全触发生效 + CPU 唤醒锁）" --latest
-          gh release upload 1.0.31 'app.apk#xyzw-assistant-v1.0.31-release.apk' --clobber --repo "$GITHUB_REPOSITORY"
-          gh release view 1.0.31 --repo "$GITHUB_REPOSITORY"
+          gh release view 1.0.32 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || gh release create 1.0.32 --repo "$GITHUB_REPOSITORY" --title "1.0.32" --notes "独立复查修复版：17 项结构缺陷全修（脱困链 domain-free、模板残留清理、假成功逃逸口、锚定判据、切号专用门、死代码清理、核验盲区）" --latest
+          gh release upload 1.0.32 'app.apk#xyzw-assistant-v1.0.32-release.apk' --clobber --repo "$GITHUB_REPOSITORY"
+          gh release view 1.0.32 --repo "$GITHUB_REPOSITORY"
